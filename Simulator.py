@@ -1,19 +1,20 @@
 from World import *
 
+
 class Simulator:
     """
     Game of Life simulator. Handles the evolution of a Game of Life ``World``.
     Read https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life for an introduction to Conway's Game of Life.
     """
 
-    def __init__(self, world = None):
+    def __init__(self, world=None):
         """
         Constructor for Game of Life simulator.
 
         :param world: (optional) environment used to simulate Game of Life.
         """
         self.generation = 0
-        if world == None:
+        if world is None:
             self.world = World(20)
         else:
             self.world = world
@@ -26,7 +27,7 @@ class Simulator:
         """
         self.generation += 1
 
-        #TODO: Do something to evolve the generation
+        # TODO: Do something to evolve the generation
 
         return self.world
 

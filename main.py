@@ -3,7 +3,7 @@ from Simulator import *
 import time
 
 # Configuratie
-VISUALISATION=True
+VISUALISATION = True
 
 if __name__ == "__main__":
     w = World(110)

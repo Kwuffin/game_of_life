@@ -63,9 +63,9 @@ class Visualisation:
             self.__redraw__()
 
             if self.editable:
-                self.clock.tick(10) # 10 fps when editing (for responsiveness)
+                self.clock.tick(10)  # 10 fps when editing (for responsiveness)
             else:
-                self.clock.tick(2) # 2 fps otherwise (to slow down simulation)
+                self.clock.tick(2)  # 2 fps otherwise (to slow down simulation)
 
     def __handle_events__(self) -> None:
         """
@@ -76,16 +76,16 @@ class Visualisation:
                 self.done = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 (mouseX, mouseY) = pygame.mouse.get_pos()
-                if mouseX > self.scaled_margin and mouseX < self.scaled_margin + self.simulator.get_world().width * self.scaled_margin:
-                    if mouseY > self.scaled_margin and mouseY < self.scaled_margin + self.simulator.get_world().height * self.scaled_margin:
+                if self.scaled_margin < mouseX < self.scaled_margin + self.simulator.get_world().width * self.scaled_margin:
+                    if self.scaled_margin < mouseY < self.scaled_margin + self.simulator.get_world().height * self.scaled_margin:
                         x = floor((mouseX - self.scaled_margin) / self.scaled_margin)
                         y = floor((mouseY - self.scaled_margin) / self.scaled_margin)
                         oldValue = self.simulator.get_world().get(x, y)
                         newValue = (oldValue + 1) % 9
                         if self.editable:
                             self.simulator.get_world().set(x, y, newValue)
-                if mouseX > self.size[0] - panelWidth + margin and mouseX < self.size[0] - margin:
-                    if mouseY > margin*3 and mouseY < margin*3+buttonHeight:
+                if self.size[0] - panelWidth + margin < mouseX < self.size[0] - margin:
+                    if margin * 3 < mouseY < margin * 3 + buttonHeight:
                         self.editable = False
                         self.paused = not self.paused
 
@@ -94,13 +94,13 @@ class Visualisation:
         Determine and adapts the scale factor of the display to fit the requested world.
         """
         # scale too big:
-        while self.scale*(self.simulator.get_world().height+2)*margin > self.size[1] and self.scale*(self.simulator.get_world().width+2)*margin > self.size[0] - panelWidth:
-            self.scale = round(self.scale*0.9, 2)
+        while self.scale * (self.simulator.get_world().height + 2) * margin > self.size[1] and self.scale * (
+                self.simulator.get_world().width + 2) * margin > self.size[0] - panelWidth:
+            self.scale = round(self.scale * 0.9, 2)
 
         # scale too small:
         if floor(self.scale * margin) < 5:
-            self.scale = 5/margin
-
+            self.scale = 5 / margin
 
     def __redraw__(self) -> None:
         """
@@ -112,32 +112,35 @@ class Visualisation:
         # Draw the cells
         for y in range(self.simulator.get_world().height):
             for x in range(self.simulator.get_world().width):
-                pygame.draw.rect(self.surface, rainbow[self.simulator.get_world().get(x,y)], ((x+1) * self.scaled_margin, (y + 1) * self.scaled_margin, self.scaled_margin, self.scaled_margin))
+                pygame.draw.rect(self.surface, rainbow[self.simulator.get_world().get(x, y)], (
+                (x + 1) * self.scaled_margin, (y + 1) * self.scaled_margin, self.scaled_margin, self.scaled_margin))
         # Draw vertical lines
-        for y in range(self.simulator.get_world().height+1):
-            pygame.draw.line(self.surface, black, (self.scaled_margin, (y + 1) * self.scaled_margin), ((self.simulator.get_world().width + 1) * self.scaled_margin, (y + 1) * self.scaled_margin))
+        for y in range(self.simulator.get_world().height + 1):
+            pygame.draw.line(self.surface, black, (self.scaled_margin, (y + 1) * self.scaled_margin), (
+            (self.simulator.get_world().width + 1) * self.scaled_margin, (y + 1) * self.scaled_margin))
         # Draw horizontal lines
-        for x in range(self.simulator.get_world().width+1):
-            pygame.draw.line(self.surface, black, ((x+1) * self.scaled_margin, self.scaled_margin), ((x + 1) * self.scaled_margin, (self.simulator.get_world().height + 1) * self.scaled_margin))
+        for x in range(self.simulator.get_world().width + 1):
+            pygame.draw.line(self.surface, black, ((x + 1) * self.scaled_margin, self.scaled_margin), (
+            (x + 1) * self.scaled_margin, (self.simulator.get_world().height + 1) * self.scaled_margin))
 
         panelX = self.size[0] - panelWidth + margin
         panelY = margin
 
         # Generation text
-        pygame.draw.rect(self.surface, white, (panelX, panelY, panelWidth-2*margin, buttonHeight))
-        genText = "Generation: "+str(self.simulator.generation)
+        pygame.draw.rect(self.surface, white, (panelX, panelY, panelWidth - 2 * margin, buttonHeight))
+        genText = "Generation: " + str(self.simulator.generation)
         gt = self.font.render(genText, 0, black)
         self.surface.blit(gt, (panelX, panelY))
 
-        buttonWidth = panelWidth-2*margin
+        buttonWidth = panelWidth - 2 * margin
         panelY += 2 * margin
         # Pause button
         pygame.draw.rect(self.surface, orange,
                          (panelX, panelY, buttonWidth, buttonHeight))
         ppText = "Play" if self.paused else "Pause"
         playPausedText = self.font.render(ppText, 0, white)
-        (w,h) = self.font.size(ppText)
-        self.surface.blit(playPausedText, (panelX+(buttonWidth-w)/2, panelY+(buttonHeight-h)/2))
+        (w, h) = self.font.size(ppText)
+        self.surface.blit(playPausedText, (panelX + (buttonWidth - w) / 2, panelY + (buttonHeight - h) / 2))
 
         # Write to screen
         pygame.display.update()

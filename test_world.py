@@ -21,7 +21,7 @@ class TestWorld(TestCase):
         self.world.set(x, y)
         self.assertEqual(self.world.world[y][x], 1)
         value = 7
-        self.world.set(x, y, 7)
+        self.world.set(x, y, value)
         self.assertEqual(self.world.world[y][x], 7)
 
     def test_get(self):
