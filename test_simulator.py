@@ -78,7 +78,7 @@ class TestSimulator(TestCase):
 
                 status = self.worldOld.get(x, y)
 
-                if 2 >= neighborCount >= 3:
+                if 2 <= neighborCount <= 3:
                     if neighborCount == 3:  # Cells with three neighbours should ALWAYS be alive in generation n+1
                         self.assertEqual(self.sim.world.get(x, y), 1)
 
