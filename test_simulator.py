@@ -69,23 +69,26 @@ class TestSimulator(TestCase):
         for _ in range(randint(0, (self.sim.world.width * self.sim.world.height) / 4)):
             self.sim.world.set(randint(0, self.sim.world.width), randint(0, self.sim.world.height), 1)
 
-        self.worldOld = deepcopy(self.sim.world)
-        self.sim.update()
+        self.worldOld = deepcopy(self.sim.world)  # Deep copies the old instance of the world, to compare it with later.
+        self.sim.update()  # Go to the next generation in the original world.
 
+        #  For every position in the grid.
         for x in range(self.sim.world.width):
             for y in range(self.sim.world.height):
-                neighborCount = np.count_nonzero(self.worldOld.get_neighbours(x, y))
+                neighborCount = np.count_nonzero(self.worldOld.get_neighbours(x, y))  # Counts amount of neighbours.
 
-                status = self.worldOld.get(x, y)
+                status = self.worldOld.get(x, y)  # Gets the old status of cell (dead/alive, 0/1)
 
                 if 2 <= neighborCount <= 3:
-                    if neighborCount == 3:  # Cells with three neighbours should ALWAYS be alive in generation n+1
+                    if neighborCount == 3:  # Cells with three neighbours should ALWAYS be alive in generation n+1.
                         self.assertEqual(self.sim.world.get(x, y), 1)
 
-                    elif neighborCount == 2:
-                        if status == 0:
+                    elif neighborCount == 2:  # Cells with two neighbors should stay unchanged (survival).
+                        if status == 0:  # Dead cells with two neighbors should stay dead.
                             self.assertEqual(self.sim.world.get(x, y), 0)
-                        elif status != 0:
+
+                        elif status != 0:  # Alive cells with two neighbors should stay alive.
                             self.assertEqual(self.sim.world.get(x, y), 1)
-                else:
+
+                else:  # If a cell has less than two, or more than three neighbours, they die (exposure/overcrowding).
                     self.assertEqual(self.sim.world.get(x, y), 0)
