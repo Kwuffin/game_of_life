@@ -6,7 +6,7 @@ import time
 VISUALISATION = True
 
 if __name__ == "__main__":
-    w = World(110)
+    w = World(60)
     sim = Simulator(w)
 
     if VISUALISATION:
@@ -15,5 +15,3 @@ if __name__ == "__main__":
         while True:
             # Create new world and print to screen
             print(sim.update())
-            # slow down simulation
-            time.sleep(0.5)

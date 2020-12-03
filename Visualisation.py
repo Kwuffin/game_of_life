@@ -28,7 +28,7 @@ class Visualisation:
     Visualiser for Game of Life ``World``s.
     """
 
-    def __init__(self, simulator: Simulator, size: (int, int) = (800, 600), scale: float = 1) -> None:
+    def __init__(self, simulator: Simulator, size: (int, int) = (1200, 900), scale: float = 1) -> None:
         """
         Constructor to initiate the visualistion. Visualisor requires focus, meaning that it connects to ``Simulator`` object to call ``update()``.
 
@@ -57,15 +57,16 @@ class Visualisation:
         while not self.done:
             self.__handle_events__()
 
-            if not self.editable and not self.paused:
+            # if not self.editable and not self.paused:
+            if not self.paused:
                 self.simulator.update()
 
             self.__redraw__()
 
             if self.editable:
-                self.clock.tick(10)  # 10 fps when editing (for responsiveness)
+                self.clock.tick(8)  # Higher fps cap to make editor smoother.
             else:
-                self.clock.tick(2)  # 2 fps otherwise (to slow down simulation)
+                self.clock.tick(8)  # 8 fps seems to be a decent speed for the game of life.
 
     def __handle_events__(self) -> None:
         """
@@ -86,7 +87,7 @@ class Visualisation:
                             self.simulator.get_world().set(x, y, newValue)
                 if self.size[0] - panelWidth + margin < mouseX < self.size[0] - margin:
                     if margin * 3 < mouseY < margin * 3 + buttonHeight:
-                        self.editable = False
+                        # self.editable = False
                         self.paused = not self.paused
 
     def __determineScale__(self) -> None:
