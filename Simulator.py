@@ -51,18 +51,21 @@ class Simulator:
                 oldStatus = self.worldOld.get(x, y)  # Gets the status of the cell in generation n - 1.
 
                 # Set cell status for generation n.
-                if 2 <= neighborCount <= 3:
-                    if neighborCount == 3:
-                        self.world.set(x, y)
+                self.world.set(x, y) if (neighborCount == 3) or (neighborCount == 2 and oldStatus == 1) else self.world.set(x, y, 0)
 
-                    elif neighborCount == 2:
-                        if oldStatus == 1:
-                            self.world.set(x, y)
-                        elif oldStatus == 0:
-                            self.world.set(x, y, 0)
-
-                else:
-                    self.world.set(x, y, 0)
+                # Before refactor:
+                # if 2 <= neighborCount <= 3:
+                #     if neighborCount == 3:
+                #         self.world.set(x, y)
+                #
+                #     elif neighborCount == 2:
+                #         if oldStatus == 1:
+                #             self.world.set(x, y)
+                #         elif oldStatus == 0:
+                #             self.world.set(x, y, 0)
+                #
+                # else:
+                #     self.world.set(x, y, 0)
 
         return self.world
 
